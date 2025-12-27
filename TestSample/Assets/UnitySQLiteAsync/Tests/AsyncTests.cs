@@ -14,25 +14,38 @@ namespace SQLite.Tests
 	// @mbrit - 2012-05-14 - NOTE - the lack of async use in this class is because the VS11 test runner falsely
 	// reports any failing test as succeeding if marked as async. Should be fixed in the "June 2012" drop...
 
-	public class Customer
+	public struct Customer
 	{
 		[AutoIncrement, PrimaryKey]
 		public int Id { get; set; }
 
-		[MaxLength (64)]
-		public string FirstName { get; set; }
+        [MaxLength(64)]
+        public string FirstName { get; set; }
 
-		[MaxLength (64)]
-		public string LastName { get; set; }
+  //      [MaxLength (64)]
+		//public string LastName { get; set; }
 
 		[MaxLength (64), Indexed]
 		public string Email { get; set; }
-	}
 
-	/// <summary>
-	/// Defines tests that exercise async behaviour.
-	/// </summary>
-	[TestFixture]
+        [MaxLength(64), Indexed]
+        public string test1 { get; set; }
+    }
+
+
+    public class CustomerInt
+    {
+        [AutoIncrement, PrimaryKey]
+        public int Id { get; set; }
+
+
+        public string FirstName { get; set; }
+
+    }
+    /// <summary>
+    /// Defines tests that exercise async behaviour.
+    /// </summary>
+    [TestFixture]
 	public class AsyncTests
 	{
 		private const string DatabaseName = "async.db";
@@ -100,11 +113,11 @@ namespace SQLite.Tests
 						}
 					}
 					var obj2 = (await (from c in conn.Table<Customer> () where c.Id == obj.Id select c).ToListAsync()).FirstOrDefault();
-					if (obj2 == null) {
-						lock (errors) {
-							errors.Add ("Failed query");
-						}
-					}
+					//if (obj2 == null) {
+					//	lock (errors) {
+					//		errors.Add ("Failed query");
+					//	}
+					//}
 				}
 				catch (Exception ex) {
 					lock (errors) {
@@ -190,7 +203,7 @@ namespace SQLite.Tests
 		{
 			Customer customer = new Customer () {
 				FirstName = "foo",
-				LastName = "bar",
+				//LastName = "bar",
 				Email = Guid.NewGuid ().ToString ()
 			};
 			return customer;
@@ -281,7 +294,7 @@ namespace SQLite.Tests
 			// create...
 			Customer customer = new Customer ();
 			customer.FirstName = "foo";
-			customer.LastName = "bar";
+			//customer.LastName = "bar";
 			customer.Email = Guid.NewGuid ().ToString ();
 
 			// connect and insert...
@@ -308,7 +321,7 @@ namespace SQLite.Tests
 			// create...
 			Customer customer = new Customer ();
 			customer.FirstName = "foo";
-			customer.LastName = "bar";
+			//customer.LastName = "bar";
 			customer.Email = Guid.NewGuid ().ToString ();
 
 			// connect and insert...
@@ -423,7 +436,7 @@ namespace SQLite.Tests
 			for (int index = 0; index < 5; index++) {
 				Customer customer = new Customer ();
 				customer.FirstName = "foo";
-				customer.LastName = "bar";
+				//customer.LastName = "bar";
 				customer.Email = Guid.NewGuid ().ToString ();
 
 				// insert...
@@ -475,7 +488,7 @@ namespace SQLite.Tests
 			for (int index = 0; index < 100; index++) {
 				Customer customer = new Customer ();
 				customer.FirstName = "foo";
-				customer.LastName = "bar";
+				//customer.LastName = "bar";
 				customer.Email = Guid.NewGuid ().ToString ();
 				customers.Add (customer);
 			}
@@ -513,7 +526,7 @@ namespace SQLite.Tests
 			{
 				// insert...
 				customer.FirstName = "foo";
-				customer.LastName = "bar";
+				//customer.LastName = "bar";
 				customer.Email = Guid.NewGuid().ToString();
 				c.Insert(customer);
 

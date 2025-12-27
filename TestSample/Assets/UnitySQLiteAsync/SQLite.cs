@@ -1796,6 +1796,8 @@ namespace SQLite
 			return Update (obj, Orm.GetType (obj));
 		}
 
+
+
 		/// <summary>
 		/// Updates all of the columns of a table using the specified object
 		/// except for its primary key.

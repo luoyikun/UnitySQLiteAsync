@@ -571,21 +571,35 @@ namespace SQLite
 			return WriteAsync (conn => conn.Update (obj));
 		}
 
-		/// <summary>
-		/// Updates all of the columns of a table using the specified object
-		/// except for its primary key.
-		/// The object is required to have a primary key.
-		/// </summary>
-		/// <param name="obj">
-		/// The object to update. It must have a primary key designated using the PrimaryKeyAttribute.
-		/// </param>
-		/// <param name="objType">
-		/// The type of object to insert.
-		/// </param>
-		/// <returns>
-		/// The number of rows updated.
-		/// </returns>
-		public UniTask<int> UpdateAsync (object obj, Type objType)
+        /// <summary>
+        /// 插入或替换数据（如果 id=1 存在则替换，不存在则插入）
+        /// </summary>
+        public UniTask<int> UpsertAsync(object obj)
+        {
+            return WriteAsync(conn =>
+            {
+                // SQLite 的 Insert 方法支持 "OR REPLACE" 语法
+                return conn.Insert(obj, "OR REPLACE");
+                // 或者使用 SQL 语句：
+                // return conn.Execute("INSERT OR REPLACE INTO ...", parameters);
+            });
+        }
+
+        /// <summary>
+        /// Updates all of the columns of a table using the specified object
+        /// except for its primary key.
+        /// The object is required to have a primary key.
+        /// </summary>
+        /// <param name="obj">
+        /// The object to update. It must have a primary key designated using the PrimaryKeyAttribute.
+        /// </param>
+        /// <param name="objType">
+        /// The type of object to insert.
+        /// </param>
+        /// <returns>
+        /// The number of rows updated.
+        /// </returns>
+        public UniTask<int> UpdateAsync (object obj, Type objType)
 		{
 			return WriteAsync (conn => conn.Update (obj, objType));
 		}
